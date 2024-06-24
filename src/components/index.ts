@@ -1,0 +1,1 @@
+export { default as NaviColumn} from "./NaviColumn.vue"

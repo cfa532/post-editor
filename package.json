@@ -13,6 +13,8 @@
   },
   "dependencies": {
     "pinia": "^2.1.7",
+    "vite-plugin-remove-console": "^2.2.0",
+    "vite-plugin-singlefile": "^2.0.2",
     "vue": "^3.4.29",
     "vue-router": "^4.3.3"
   },
