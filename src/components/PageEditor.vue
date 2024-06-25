@@ -9,6 +9,7 @@ const contentColumn = ref<ContentColumn[]>([])
 const columnTitle = ref("Funny")
 
 onMounted(async () => {
+    
     document.title = import.meta.env.VITE_PAGE_TITLE
     try {
         contentColumn.value = mmInfo.naviColumnTree
@@ -23,7 +24,7 @@ onMounted(async () => {
 </script>
 
 <template>
-    <div class="container">
+    <div class="container-fluid">
         <div class="row">
             <div class="col-2">
                 <ul class="top">
@@ -38,13 +39,7 @@ onMounted(async () => {
 </template>
 
 <style scoped>
-.container {
-  margin-top: 1rem;
-}
-.col-2, .col-10 {
-    display: inline-block;
-}
-.top {
+.col-2 {
     width: 160px;
 }
 </style>

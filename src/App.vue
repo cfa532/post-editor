@@ -14,14 +14,16 @@ import { RouterLink, RouterView } from 'vue-router'
             </nav>
         </div>
     </header>
-
-    <RouterView />
+    <div class="content">
+        <hr>
+        <RouterView />
+    </div>
 </template>
 
 <style scoped>
 header {
     display: flex;
-    align-items:first center;
+    align-items: center;
     justify-content: flex-start;
     padding: 1rem;
     position: fixed;
@@ -29,9 +31,16 @@ header {
     left: 0;
     width: 100%;
     background-color: white;
-    /* Ensure the header has a background color */
-    z-index: 1000;
-    /* Ensure the header stays on top of other content */
+}
+
+.content {
+    /* Adjust this value based on the height of your header */
+    padding: 1rem;
+    width: 100%;
+    position: fixed;
+    left: 0;
+    top: 40px;
+    width: 100%;
 }
 
 .logo {
@@ -71,13 +80,11 @@ nav a:first-of-type {
     header {
         padding-right: calc(var(--section-gap) / 2);
     }
-
     .logo {
         margin-right: 2rem;
     }
-
     nav {
-        font-size: 1.2rem;
+        font-size: 1.1rem;
     }
 }
 </style>

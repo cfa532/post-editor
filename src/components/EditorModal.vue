@@ -31,7 +31,6 @@ const caption = ref<HTMLFormElement>();
 const divAttach = ref()
 const dropHere = ref()
 const textArea = ref<HTMLTextAreaElement>()
-const myModal = ref()
 const sliceSize = 1024 * 1024 * 10    // 10MB per slice of file
 const filesUpload = ref<File[]>([]);
 const uploadProgress = reactive<number[]>([]); // New ref to store upload progress of each file
@@ -45,7 +44,6 @@ const props = defineProps({
 
 onMounted(async () => {
   console.log("Editor mount", props)
-  window.addEventListener("click", onClickOutside);
 })
 watch(()=>props.display, (nv, ov)=>{
   if (nv!=ov && nv == 'block') {
@@ -233,15 +231,6 @@ function removeFile(f: File) {
   filesUpload.value.splice(i, 1)
 }
 
-// When the user clicks anywhere outside of the modal, close it
-const onClickOutside = (e: MouseEvent) => {
-  if (e.target == myModal.value) {
-    emit("hide")
-  }
-};
-onBeforeUnmount(() => {
-  window.removeEventListener("click", onClickOutside);
-});
 watch(() => textValue.value, (newVal, oldVal) => {
   if (newVal !== oldVal) {
     localStorage.setItem("tempTextValueUploader", newVal)
@@ -281,8 +270,7 @@ watch(() => textValue.value, (newVal, oldVal) => {
   margin: 5% 10% 5% 2%;
   padding: 10px;
   border: 1px solid #888;
-  width: 800px;
-  max-width: 1024px;
+  /* max-width: 1024px; */
 }
 
 </style>
