@@ -1,85 +1,83 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
+// import HelloWorld from './components/HelloWorld.vue'
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
+    <header>
+        <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="40" height="40" />
+        <div class="wrapper">
+            <!-- <HelloWorld msg="You did it!" /> -->
+            <nav>
+                <RouterLink to='/'>Home</RouterLink>
+                <RouterLink to='/about'>About</RouterLink>
+            </nav>
+        </div>
+    </header>
 
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
-    </div>
-  </header>
-
-  <RouterView />
+    <RouterView />
 </template>
 
 <style scoped>
 header {
-  line-height: 1.5;
-  max-height: 100vh;
+    display: flex;
+    align-items:first center;
+    justify-content: flex-start;
+    padding: 1rem;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: white;
+    /* Ensure the header has a background color */
+    z-index: 1000;
+    /* Ensure the header stays on top of other content */
 }
 
 .logo {
-  display: block;
-  margin: 0 auto 2rem;
+    margin-right: 1rem;
+}
+
+.wrapper {
+    display: flex;
+    align-items: center;
 }
 
 nav {
-  width: 100%;
-  font-size: 12px;
-  text-align: center;
-  margin-top: 2rem;
+    display: flex;
+    gap: 1rem;
 }
 
 nav a.router-link-exact-active {
-  color: var(--color-text);
+    color: var(--color-text);
 }
 
 nav a.router-link-exact-active:hover {
-  background-color: transparent;
+    background-color: transparent;
 }
 
 nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
+    text-decoration: none;
+    /* color: inherit; */
+    padding: 0.5rem 1rem;
+    border-left: 1px solid var(--color-border);
 }
 
 nav a:first-of-type {
-  border: 0;
+    border-left: none;
 }
 
 @media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
+    header {
+        padding-right: calc(var(--section-gap) / 2);
+    }
 
-  .logo {
-    margin: 0 2rem 0 0;
-  }
+    .logo {
+        margin-right: 2rem;
+    }
 
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
-
-    padding: 1rem 0;
-    margin-top: 1rem;
-  }
+    nav {
+        font-size: 1.2rem;
+    }
 }
 </style>

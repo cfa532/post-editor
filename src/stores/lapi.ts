@@ -96,7 +96,6 @@ export const useLeither = defineStore({
   }),
   getters: {
     client: (state) => window.hprose.Client.create('ws://' + state.baseIP + '/ws/', ayApi),
-    baseUrl: (state) => window.location.protocol + '//' + state.baseIP + '/',
     sid: (state) => {
       if (sessionStorage.getItem('sid') && !state._sid) {
         state._sid = sessionStorage.getItem('sid')!
