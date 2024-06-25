@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, onBeforeUnmount, ref, reactive, watch, nextTick } from "vue";
+import { onMounted, ref, reactive, watch, nextTick } from "vue";
 import { Preview }from "./index";
 import { useLeither, useMimei, useSpinner } from '../stores/lapi'
 const api = useLeither();
