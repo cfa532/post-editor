@@ -241,7 +241,7 @@ export const useMimei = defineStore({
         throw new Error(err as string)
       }
     },
-    async getColumn(title: string) {
+    getColumn(title: string) {
       // given title, return Column obj, and set Column at the same time
       return findColumn(this.naviColumnTree, title)
 

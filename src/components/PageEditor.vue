@@ -6,7 +6,7 @@ import { useMimei, useLeither } from "../stores/lapi"
 const api = useLeither();
 const mmInfo = useMimei();
 const contentColumn = ref<ContentColumn[]>([])
-const columnTitle = ref("Funny")
+const columnTitle = ref("Pictures")
 
 onMounted(async () => {
     document.title = import.meta.env.VITE_PAGE_TITLE

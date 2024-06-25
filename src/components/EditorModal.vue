@@ -40,8 +40,7 @@ const props = defineProps({
   column: { type: String, required: true }    // column title
 })
 const selectedColumn = computed(() => {
-  console.log(props.column)
-  return props.column
+  return mmInfo.getColumn(props.column).titleZh
 })
 onMounted(async () => {
   console.log("Editor mount", props)
@@ -237,7 +236,7 @@ watch(() => textValue.value, (newVal, oldVal) => {
     <div class="content-wrapper">
       <div class="input-container">
         <div>
-          <span class="input-title">{{ selectedColumn }}</span>&nbsp;&nbsp;
+          <span class="input-title"><b>{{ selectedColumn }}</b></span>&nbsp;&nbsp;
           <input type="text" placeholder="Caption... required" width="400px" v-model="inpCaption" ref="caption" class="input-caption">
         </div>
         <textarea ref="textArea" v-model="textValue" placeholder="Input......" class="input-textarea"></textarea>

@@ -47,9 +47,4 @@ li:hover {
   background-color: rgb(220, 247, 202);
   cursor: pointer;
 }
-
-.highlight {
-  background-color: yellow; /* Change this to any color you prefer */
-  font-weight: bold;
-}
 </style>
