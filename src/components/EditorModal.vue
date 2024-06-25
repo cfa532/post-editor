@@ -238,39 +238,104 @@ watch(() => textValue.value, (newVal, oldVal) => {
 })
 </script>
 
-<template> 
-    <div class="modal-content" @dragover.prevent="dragOver" @drop.prevent="onSelect">
-      <div style="width:99%; margin-bottom: 10px;">
-        <input type="text" placeholder="Caption...  required" v-model="inpCaption" ref="caption" style="border:0px; width:100%; height:22px; margin-bottom: 8px;">
-        <textarea ref="textArea" v-model="textValue" placeholder="Input......"
-          style="border:1px; width:100%; height: 110px; border-radius: 3px;"></textarea>
-        <div ref="dropHere" hidden
-          style="border: 1px solid lightgrey; width:100%; height:110px; margin: 0px; text-align: center; vertical-align: middle;">
-          <p style="font-size: 24px;">DROP HERE</p>
+<template>
+  <div class="modal-content" @dragover.prevent="dragOver" @drop.prevent="onSelect">
+    <div class="content-wrapper">
+      <div class="input-container">
+        <input type="text" placeholder="Caption... required" v-model="inpCaption" ref="caption" class="input-caption">
+        <textarea ref="textArea" v-model="textValue" placeholder="Input......" class="input-textarea"></textarea>
+        <div ref="dropHere" hidden class="drop-here">
+          <p>DROP HERE</p>
         </div>
       </div>
-      <form @submit.prevent="onSubmit" enctype="multipart/form-data" @paste.prevent="onSelect">
-        <div ref="divAttach" hidden
-        style="border: 0px solid lightgray; border-radius: 3px; margin-bottom: 6px; padding-top:0px;" >
-        <Preview @file-canceled="removeFile(file)" v-for="(file, index) in filesUpload" :key="index"
-          v-bind:src="file" v-bind:progress="uploadProgress[index]"></Preview>
+      <form @submit.prevent="onSubmit" enctype="multipart/form-data" @paste.prevent="onSelect" class="form-container">
+        <div ref="divAttach" hidden class="preview-container">
+          <Preview @file-canceled="removeFile(file)" v-for="(file, index) in filesUpload" :key="index"
+            v-bind:src="file" v-bind:progress="uploadProgress[index]"></Preview>
         </div>
-          <input id="selectFiles" @change="onSelect" type="file" hidden multiple>
+        <input id="selectFiles" @change="onSelect" type="file" hidden multiple>
+        <div class="button-container">
           <button @click.prevent="selectFile">Choose</button>
-          <button style="float: right;">Submit</button>
+          <button type="submit">Submit</button>
+        </div>
       </form>
     </div>
+  </div>
 </template>
 
 <style scoped>
-/* The Close Button */
 .modal-content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
   border-radius: 5px;
   background-color: #ebf0f3;
   margin: 5% 10% 5% 2%;
   padding: 10px;
   border: 1px solid #888;
-  /* max-width: 1024px; */
+  height: 80vh;
 }
 
+.content-wrapper {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.input-container {
+  flex: 1;
+  margin-bottom: 10px;
+}
+
+.input-caption {
+  border: 0px;
+  width: 100%;
+  height: 30px;
+  margin-bottom: 8px;
+}
+
+.input-textarea {
+  margin: 5px;
+  position: absolute;
+  top:50px;
+  left: 0;
+  bottom: 60px;
+  /* height: 150%; */
+  border: 1px solid lightgrey;
+  width: 99%;
+  border-radius: 3px;
+}
+
+.drop-here {
+  border: 1px solid lightgrey;
+  width: 100%;
+  height: 200px;
+  margin: 0px;
+  text-align: center;
+}
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  height: 10px;
+}
+
+.preview-container {
+  margin: 10px;
+  position: absolute;
+  left: 0;
+  bottom: 50px;
+  border: 0px solid lightgray;
+  border-radius: 5px;
+  margin-bottom: 6px;
+  padding-top: 0px;
+}
+
+.button-container {
+  height: auto;
+  display: flex;
+  justify-content: space-between;
+  margin-top: auto;
+}
 </style>

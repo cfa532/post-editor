@@ -24,22 +24,40 @@ onMounted(async () => {
 </script>
 
 <template>
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-2">
-                <ul class="top">
-                    <NaviColumn v-for="(c, i) in contentColumn" :key="i" :column=c></NaviColumn>
+    <div class='container-fluid'>
+        <div class='row'>
+            <div class='col-2'>
+                <ul class='top'>
+                    <NaviColumn v-for='(c, i) in contentColumn' :key='i' :column=c></NaviColumn>
                 </ul>
             </div>
-            <div class="col-10">
-                <EditorModal :column="columnTitle"></EditorModal>
+            <div class='col-10'>
+                <EditorModal :column='columnTitle'></EditorModal>
             </div>
         </div>
     </div>
 </template>
 
 <style scoped>
+.container-fluid {
+    height: 100vh; /* Ensure the container takes the full height of the viewport */
+}
+
+.row {
+    display: flex;
+    align-items: flex-start; /* Align items to the top */
+    height: 100%; /* Ensure the row takes the full height of the container */
+}
+
 .col-2 {
     width: 160px;
+}
+
+.col-10 {
+    margin: -50px 0 0 0; /* Remove any margin that might affect alignment */
+    width: 80%;
+    padding: 0; /* Remove any padding that might affect alignment */
+    display: flex;
+    flex-direction: column; /* Ensure the content inside col-10 is aligned to the top */
 }
 </style>
