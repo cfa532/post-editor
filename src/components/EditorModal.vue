@@ -1,12 +1,13 @@
 <script setup lang="ts">
-import { onMounted, ref, reactive, watch, nextTick } from "vue";
-import { Preview }from "./index";
+import { onMounted, ref, reactive, watch, computed } from "vue";
+import { Preview } from "./index";
 import { useLeither, useMimei, useSpinner } from '../stores/lapi'
+
 const api = useLeither();
 const mmInfo = useMimei();
-class FileInfo{
+class FileInfo {
   name; lastModified; size; type; caption; mid;
-  constructor(name: string, lastModified: number, size: number, type: string, caption:string="") {
+  constructor(name: string, lastModified: number, size: number, type: string, caption: string = "") {
     this.name = name;
     this.lastModified = lastModified;
     this.size = size;
@@ -36,28 +37,21 @@ const filesUpload = ref<File[]>([]);
 const uploadProgress = reactive<number[]>([]); // New ref to store upload progress of each file
 
 const props = defineProps({
-    // text : {type: String, required: false},       // text input from editor
-    // attachments: {type: [File], required: false},
-    display: {type: String, required: false, default:"block"},
-    column: {type: String, required: true}    // column title
+  column: { type: String, required: true }    // column title
 })
-
+const selectedColumn = computed(() => {
+  console.log(props.column)
+  return props.column
+})
 onMounted(async () => {
   console.log("Editor mount", props)
 })
-watch(()=>props.display, (nv, ov)=>{
-  if (nv!=ov && nv == 'block') {
-    // focus() was called before textArea was rendered. Use nextTick() to fix it.
-    nextTick(()=>{
-      textArea.value?.focus()
-    })
-  }
-})
+
 async function onSelect(e: Event) {
   const files = (e as HTMLInputEvent).target.files || (e as DragEvent).dataTransfer?.files || (e as ClipboardEvent).clipboardData?.files;
   if (files?.length! > 0) {
     Array.from(files!).forEach(f => {
-      if (filesUpload.value.findIndex((e:File) => {return e.size === f.size && e.name === f.name }) === -1) {
+      if (filesUpload.value.findIndex((e: File) => { return e.size === f.size && e.name === f.name }) === -1) {
         // remove duplication
         if (!inpCaption.value || inpCaption.value.trim() === "") {
           inpCaption.value = f.name
@@ -102,7 +96,7 @@ async function uploadFile(files: File[]): Promise<PromiseSettledResult<FileInfo>
     // Create a FileInfo object with file name, last modified time,
     const fi = new FileInfo(file.name, file.lastModified, file.size, file.type);
     fi.mid = await readFileSlice(fsid, await file.arrayBuffer(), 0, index);   // return an IPFS id actually
-    
+
     // Save non-media files as Mimei type, for easy download and open
     if (fi.type.search(/(image|video|audio)/i) === -1) {
       const mid = await api.client.MMCreate(api.sid, "", "", "{{auto}}", 1, 0x07276705);
@@ -117,7 +111,7 @@ async function uploadFile(files: File[]): Promise<PromiseSettledResult<FileInfo>
   }
 
   // Use Promise.allSettled to wait for all file upload operations to complete
-  return Promise.allSettled(files.map((file,i) => uploadSingleFile(file, i)));
+  return Promise.allSettled(files.map((file, i) => uploadSingleFile(file, i)));
 }
 async function onSubmit() {
   if (!inpCaption.value || inpCaption.value!.trim() === "" || (filesUpload.value.length === 0 && textValue.value.trim() === "")) {
@@ -134,7 +128,7 @@ async function onSubmit() {
       let fvPairs: FVPair[] = (await uploadFile(filesUpload.value))
         .filter(v => { return v.status === 'fulfilled'; })
         .map((v: any) => { return { field: v.value.mid, value: v.value } });  // mid as field, fileInfo as value
-      
+
       if (!fvPairs || fvPairs.length < filesUpload.value.length) {
         // uploading files failed
         throw "Attachments uploading failed" + fvPairs.toString()
@@ -208,13 +202,13 @@ async function onSubmit() {
   }
 }
 
-async function readFileSlice(fsid: string, arr: ArrayBuffer, start: number, index: number):Promise<string> {
+async function readFileSlice(fsid: string, arr: ArrayBuffer, start: number, index: number): Promise<string> {
   // reading file slice by slice, start at given position
   var end = Math.min(start + sliceSize, arr.byteLength);
   let count = await api.client.MFSetData(fsid, arr.slice(start, end), start);
   // Calculate progress
   uploadProgress[index] = Math.floor((start + count) / arr.byteLength * 100);
-  console.log("Uploading...", uploadProgress[index]+"%")
+  console.log("Uploading...", uploadProgress[index] + "%")
 
   if (end === arr.byteLength) {
     // last slice read. Convert temp to IPFS file
@@ -227,7 +221,7 @@ async function readFileSlice(fsid: string, arr: ArrayBuffer, start: number, inde
 
 function removeFile(f: File) {
   // removed file from preview list
-  var i = filesUpload.value.findIndex((e:File) => e==f);
+  var i = filesUpload.value.findIndex((e: File) => e == f);
   filesUpload.value.splice(i, 1)
 }
 
@@ -242,7 +236,10 @@ watch(() => textValue.value, (newVal, oldVal) => {
   <div class="modal-content" @dragover.prevent="dragOver" @drop.prevent="onSelect">
     <div class="content-wrapper">
       <div class="input-container">
-        <input type="text" placeholder="Caption... required" v-model="inpCaption" ref="caption" class="input-caption">
+        <div>
+          <span class="input-title">{{ selectedColumn }}</span>&nbsp;&nbsp;
+          <input type="text" placeholder="Caption... required" width="400px" v-model="inpCaption" ref="caption" class="input-caption">
+        </div>
         <textarea ref="textArea" v-model="textValue" placeholder="Input......" class="input-textarea"></textarea>
         <div ref="dropHere" hidden class="drop-here">
           <p>DROP HERE</p>
@@ -250,8 +247,8 @@ watch(() => textValue.value, (newVal, oldVal) => {
       </div>
       <form @submit.prevent="onSubmit" enctype="multipart/form-data" @paste.prevent="onSelect" class="form-container">
         <div ref="divAttach" hidden class="preview-container">
-          <Preview @file-canceled="removeFile(file)" v-for="(file, index) in filesUpload" :key="index"
-            v-bind:src="file" v-bind:progress="uploadProgress[index]"></Preview>
+          <Preview @file-canceled="removeFile(file)" v-for="(file, index) in filesUpload" :key="index" v-bind:src="file"
+            v-bind:progress="uploadProgress[index]"></Preview>
         </div>
         <input id="selectFiles" @change="onSelect" type="file" hidden multiple>
         <div class="button-container">
@@ -270,7 +267,6 @@ watch(() => textValue.value, (newVal, oldVal) => {
   flex-direction: column;
   border-radius: 5px;
   background-color: #ebf0f3;
-  margin: 5% 10% 5% 2%;
   padding: 10px;
   border: 1px solid #888;
   height: 80vh;
@@ -285,11 +281,16 @@ watch(() => textValue.value, (newVal, oldVal) => {
 .input-container {
   flex: 1;
   margin-bottom: 10px;
+  display: inline;
 }
-
+.input-title {
+  border: 0px;
+  height: 30px;
+  margin-bottom: 8px;
+}
 .input-caption {
   border: 0px;
-  width: 100%;
+  width: 80%;
   height: 30px;
   margin-bottom: 8px;
 }
@@ -297,7 +298,7 @@ watch(() => textValue.value, (newVal, oldVal) => {
 .input-textarea {
   margin: 5px;
   position: absolute;
-  top:50px;
+  top: 50px;
   left: 0;
   bottom: 60px;
   /* height: 150%; */

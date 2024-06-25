@@ -9,7 +9,6 @@ const contentColumn = ref<ContentColumn[]>([])
 const columnTitle = ref("Funny")
 
 onMounted(async () => {
-    
     document.title = import.meta.env.VITE_PAGE_TITLE
     try {
         contentColumn.value = mmInfo.naviColumnTree
@@ -27,11 +26,11 @@ onMounted(async () => {
     <div class='container-fluid'>
         <div class='row'>
             <div class='col-2'>
-                <ul class='top'>
-                    <NaviColumn v-for='(c, i) in contentColumn' :key='i' :column=c></NaviColumn>
-                </ul>
+                <NaviColumn @selected-column="id => columnTitle = id" v-for='(c, i) in contentColumn' :key='i' :column=c>
+                </NaviColumn>
             </div>
             <div class='col-10'>
+                <!-- <QuillEditor :column='columnTitle'></QuillEditor> -->
                 <EditorModal :column='columnTitle'></EditorModal>
             </div>
         </div>
@@ -40,13 +39,16 @@ onMounted(async () => {
 
 <style scoped>
 .container-fluid {
-    height: 100vh; /* Ensure the container takes the full height of the viewport */
+    height: 100vh;
+    /* Ensure the container takes the full height of the viewport */
 }
 
 .row {
     display: flex;
-    align-items: flex-start; /* Align items to the top */
-    height: 100%; /* Ensure the row takes the full height of the container */
+    align-items: flex-start;
+    /* Align items to the top */
+    height: 100%;
+    /* Ensure the row takes the full height of the container */
 }
 
 .col-2 {
@@ -54,10 +56,13 @@ onMounted(async () => {
 }
 
 .col-10 {
-    margin: -50px 0 0 0; /* Remove any margin that might affect alignment */
+    margin: -0px 0 0 0;
+    /* Remove any margin that might affect alignment */
     width: 80%;
-    padding: 0; /* Remove any padding that might affect alignment */
+    padding: 0;
+    /* Remove any padding that might affect alignment */
     display: flex;
-    flex-direction: column; /* Ensure the content inside col-10 is aligned to the top */
+    flex-direction: column;
+    /* Ensure the content inside col-10 is aligned to the top */
 }
 </style>
